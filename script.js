@@ -15,3 +15,11 @@ const getUsersPromise = promisify(getUsers);
 getUsersPromise(['joe','john','jane'])
 .then(userCall)
 .catch(err=>console.log(err))
+
+testAsync = () =>{
+    setTimeout(()=>{
+        console.log('test')
+    },2000)
+}
+testAsync();
+testAsync();
