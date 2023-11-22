@@ -1,5 +1,5 @@
 const {promisify} = require('util')
-const {batamu, sumNumber} = require('./batako')
+const {batamu, sumNumber} = require('./test')
 
 function getUsers(arr, cb){
     setTimeout(()=>{
@@ -17,11 +17,20 @@ getUsersPromise(['joe','john','jane'])
 .then(userCall)
 .catch(err=>console.log(err))
 
-const promiseMe = new Promise((resolve,reject)=>{
-    setTimeout(()=>{
-        resolve('Success')
-    },2000)
-})
+const japaneseTest = isPassed => {
+    return new Promise((resolve,reject) =>{
+        setTimeout(()=>{
+            if(!isPassed){
+                reject(new Error('Anda tidak lulus'))
+                return;
+            }
+            resolve('Anda lulus');
+        },2000);
+    });
+}
+japaneseTest(true)
+.then(res => console.log(res))
+.catch(err => console.log(err.message))
 
 testAsync = () =>{
     setTimeout(()=>{
