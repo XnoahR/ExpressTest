@@ -17,6 +17,7 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+//Save and write new data to json file
 rl.question('Masukkan nama anda : ',(name)=>{
     rl.question('Masukkan umur anda : ',(age)=>{
         data = {
