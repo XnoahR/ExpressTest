@@ -3,13 +3,16 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
-    res.send(
-        fs.readFileSync('./index.html', 'utf-8')
-    );
+    res.sendFile('./public/index.html', { root: __dirname });
 });
 
-
+app.get('/data/:id', (req, res) => {
+    const id = req.params.id;
+    res.send(`data ${id}, ${req.query.hewan}`)
+});
 
 
 app.use('/', (req, res) => {
