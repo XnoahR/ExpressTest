@@ -23,12 +23,16 @@ const dataArr = [
 
 app.get("/", (req, res) => {
   // res.sendFile('./public/index.html', { root: __dirname });
-  res.render("index", { title: "Home", dataArr });
+  res.render("index", { title: "Home",
+  layout: "layouts/main",
+  dataArr });
 });
 
 app.get("/data/:id", (req, res) => {
   const id = req.params.id;
-  res.render("data", { title: "Data", id: id, dataArr });
+  res.render("data", { title: "Data", id: id,
+  layout: "layouts/main",
+  dataArr });
 });
 
 app.use("/", (req, res) => {
