@@ -3,15 +3,18 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
-app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.use(express.static('views'));
+
 
 app.get('/', (req, res) => {
-    res.sendFile('./public/index.html', { root: __dirname });
+    // res.sendFile('./public/index.html', { root: __dirname });
+    res.render('index', { title: 'Home' });
 });
 
 app.get('/data/:id', (req, res) => {
     const id = req.params.id;
-    res.send(`data ${id}, ${req.query.hewan}`)
+    res.render('data', { title: 'Data', id: id });
 });
 
 
