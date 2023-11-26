@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title;%></title>
+    <title>
+        <%= title;%>
+    </title>
 </head>
+
 <body>
     GARGANTUAR!<%= id %>
-
+        <% if (dataArr < 1) { %>
+            <p>Lee Chawnima lee</p>
+            <% } else { %>
+                <ul>
+                    <% dataArr.forEach(e=> { %>
+                        <li>
+                            <%= e.name %>
+                        </li>
+                        <li>
+                            <%= e.age %>
+                        </li>
+                        <br>
+                        <% }) %>
+                            <% } %>
+                </ul>
 </body>
+
 </html>
