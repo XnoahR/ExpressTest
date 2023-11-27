@@ -1,21 +1,16 @@
-<%- include('layouts/header') %>
-<%- include('layouts/nav') %>
-
-GARGANTUAR!<%= id %>
-<% if (dataArr < 1) { %>
-    <p>Lee Chawnima lee</p>
-    <% } else { %>
-        <ul>
-            <% dataArr.forEach(e=> { %>
-                <li>
-                    <%= e.name %>
-                </li>
-                <li>
-                    <%= e.age %>
-                </li>
-                <br>
-                <% }) %>
-                            <% } %>
-                        </ul>
-                        
-<%- include('layouts/footer') %>
+ID: <%= id %>
+    <% if (dataArr < 1) { %>
+        <p>Lee Chawnima lee</p>
+        <% } else { %>
+            <ul>
+                <% dataArr.forEach(e=> { %>
+                    <li>
+                        <%= e.name %>
+                    </li>
+                    <li>
+                        <%= e.age %>
+                    </li>
+                    <br>
+                    <% }) %>
+                        <% } %>
+            </ul>
