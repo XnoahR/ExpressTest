@@ -1,5 +1,6 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const router = require("./router.js");
 const fs = require("fs");
 const {conn, createTable} = require("./db.js"); 
 const app = express();
@@ -18,74 +19,60 @@ app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.use(express.static("views"));
 
-conn.query('SELECT * FROM buku', (err, rows) => {  
-  if(err) throw err;
+// 
 
-  console.log('Data received from Db:');
-  bookDatas = rows.map((row) => {
-    return {...row};
-  });
-});
 
-const writeBooks = () => {
 
-  conn.query('SELECT * FROM buku', (err, rows) => {     
-    if(err) throw err;
-    console.log('Data received from Db:');
-    bookDatas.push(...rows);
-    fs.writeFileSync("./books.json", JSON.stringify(bookDatas, null, 2));
-  });
-};
-
+app.use(router);
 app.use((req, res, next) => {
-  writeBooks();
+  // writeBooks();
   next();
 });
 
 
-const dataArr = [
-  {
-    name: "John",
-    age: 25,
-  },
-  {
-    name: "Jane",
-    age: 24,
-  },
-  {
-    name: "Jack",
-    age: 26,
-  },
-];
+// const dataArr = [
+//   {
+//     name: "John",
+//     age: 25,
+//   },
+//   {
+//     name: "Jane",
+//     age: 24,
+//   },
+//   {
+//     name: "Jack",
+//     age: 26,
+//   },
+// ];
 
-app.get("/user/:id", (req, res) => {
-  userId= req.params.id;
-  const user = charDatas.find((user) => user.id == userId);
+// app.get("/user/:id", (req, res) => {
+//   userId= req.params.id;
+//   const user = charDatas.find((user) => user.id == userId);
 
-  if(user){
-    res.send(user);
-  }
-  else{
-    res.status(404);
-    res.send("User not found");
-  }
-});
+//   if(user){
+//     res.send(user);
+//   }
+//   else{
+//     res.status(404);
+//     res.send("User not found");
+//   }
+// });
 
-app.get("/", (req, res) => {
-  // res.sendFile('./public/index.html', { root: __dirname });
-  res.render("index", { title: "Home", layout: "layouts/main", dataArr });
-});
+// app.get("/", (req, res) => {
+//   // res.sendFile('./public/index.html', { root: __dirname });
+//   res.render("index", { title: "Home", layout: "layouts/main", dataArr });
+// });
 
-app.get("/data/:id", (req, res) => {
-  const id = req.params.id;
-  res.render("data", {
-    title: "Data",
-    id: id,
-    layout: "layouts/main",
-    data: charDatas,
-    bookDatas,
-  });
-});
+// app.get("/data/:id", (req, res) => {
+//   const id = req.params.id;
+//   res.render("data", {
+//     title: "Data",
+//     id: id,
+//     layout: "layouts/main",
+//     data: charDatas,
+//     bookDatas,
+//   });
+// });
 
 app.use("/", (req, res) => {
   res.status(404);
