@@ -26,8 +26,21 @@ conn.query('SELECT * FROM buku', (err, rows) => {
   });
 });
 
+const writeBooks = () => {
+
+  conn.query('SELECT * FROM buku', (err, rows) => {     
+    if(err) throw err;
+    console.log('Data received from Db:');
+    bookDatas = rows.map((row) => {
+      return {...row};
+    });
+    fs.writeFileSync("./books.json", JSON.stringify(bookDatas, null, 2));
+  });
+};
+
 app.use((req, res, next) => {
   console.log(bookDatas)
+  writeBooks();
   next();
 });
 

@@ -1,0 +1,74 @@
+[
+  {
+    "id": 6,
+    "nama": "December",
+    "pengarang": "Neck Deep",
+    "available": 4,
+    "sampul": "648908c086017.jpg",
+    "kategori": "Biograph"
+  },
+  {
+    "id": 7,
+    "nama": "Wake Me Up When September Ends",
+    "pengarang": "Green Day",
+    "available": 10,
+    "sampul": "6489086b46d89.png",
+    "kategori": "Biograph"
+  },
+  {
+    "id": 8,
+    "nama": "Bored to Death",
+    "pengarang": "blink",
+    "available": 7,
+    "sampul": "6489083003283.jpg",
+    "kategori": "Horror"
+  },
+  {
+    "id": 9,
+    "nama": "Together for the Kids",
+    "pengarang": "blink",
+    "available": 4,
+    "sampul": "6489083629f7b.jpg",
+    "kategori": "Drama"
+  },
+  {
+    "id": 10,
+    "nama": "Yellow",
+    "pengarang": "Gawr Gura",
+    "available": 4,
+    "sampul": "64890530e550a.jpg",
+    "kategori": "Sociology"
+  },
+  {
+    "id": 11,
+    "nama": "Lost Kitten",
+    "pengarang": "Ryou",
+    "available": 1,
+    "sampul": "6489091b38e0b.png",
+    "kategori": "Romance"
+  },
+  {
+    "id": 18,
+    "nama": "Naruto V72",
+    "pengarang": "Masashi Kishimoto",
+    "available": 3,
+    "sampul": "naruto.jpg",
+    "kategori": "Comic"
+  },
+  {
+    "id": 19,
+    "nama": "NarutoL",
+    "pengarang": "Masashi Kishimoto",
+    "available": 4,
+    "sampul": "6488fd8b70b2e.jpg",
+    "kategori": "Comic"
+  },
+  {
+    "id": 21,
+    "nama": "Waifu",
+    "pengarang": "Ray",
+    "available": 4,
+    "sampul": "64918ee5f00d9.jpg",
+    "kategori": "Romance"
+  }
+]
