@@ -1,15 +1,16 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const fs = require("fs");
-const conn = require("./db.js"); 
+const {conn, createTable} = require("./db.js"); 
 const app = express();
 charDatas = JSON.parse(fs.readFileSync("./character.json", "utf8"));
 bookDatas = [];
 
 
-const port = 3000;
+app.set('port', process.env.PORT || 3000);
 app.use((req, res, next) => {
   console.log("Time:", Date.now());
+  createTable();
   next();
 });
 
@@ -31,15 +32,12 @@ const writeBooks = () => {
   conn.query('SELECT * FROM buku', (err, rows) => {     
     if(err) throw err;
     console.log('Data received from Db:');
-    bookDatas = rows.map((row) => {
-      return {...row};
-    });
+    bookDatas.push(...rows);
     fs.writeFileSync("./books.json", JSON.stringify(bookDatas, null, 2));
   });
 };
 
 app.use((req, res, next) => {
-  console.log(bookDatas)
   writeBooks();
   next();
 });
@@ -85,6 +83,7 @@ app.get("/data/:id", (req, res) => {
     id: id,
     layout: "layouts/main",
     data: charDatas,
+    bookDatas,
   });
 });
 
@@ -93,6 +92,6 @@ app.use("/", (req, res) => {
   res.send("<h1>404</h1>");
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.listen(app.get('port'), () => {
+  console.log(`listening at http://localhost:${app.get('port')}`);
 });
