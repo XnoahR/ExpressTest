@@ -55,6 +55,7 @@ const createTable = (conn) => {
     module.exports = {
         getConnection,
         createTable,
+        pool
     };
     
     // const conn = mysql.createConnection({

@@ -16,16 +16,16 @@ getConnection((connection) => {
 app.set('port', process.env.PORT || 3000);
 app.use((req, res, next) => {
   console.log("Time:", Date.now());
-  createTable(conn);
+  
   next();
 });
+
 
 app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.use(express.static("views"));
 
 // 
-
 
 
 app.use(router);
@@ -87,3 +87,8 @@ app.use("/", (req, res) => {
 app.listen(app.get('port'), () => {
   console.log(`listening at http://localhost:${app.get('port')}`);
 });
+
+
+module.exports = {
+  getConnection,
+};
