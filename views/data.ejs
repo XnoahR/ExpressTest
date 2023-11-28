@@ -1,14 +1,20 @@
 ID: <%= id %>
-    <% if (dataArr < 1) { %>
+    <% if (data < 1) { %>
         <p>Lee Chawnima lee</p>
         <% } else { %>
             <ul>
-                <% dataArr.forEach(e=> { %>
+                <% data.forEach(e=> { %>
                     <li>
-                        <%= e.name %>
+                        <%= e.id %>
                     </li>
                     <li>
-                        <%= e.age %>
+                        <%= e.email %>
+                    </li>
+                    <li>
+                        <%= e.phone %>
+                    </li>
+                    <li>
+                        <%= e.email %>
                     </li>
                     <br>
                     <% }) %>

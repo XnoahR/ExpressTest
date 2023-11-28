@@ -1,8 +1,11 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const fs = require("fs");
+const conn = require("./db.js"); 
 const app = express();
 charDatas = JSON.parse(fs.readFileSync("./character.json", "utf8"));
+bookDatas = [];
+
 
 const port = 3000;
 app.use((req, res, next) => {
@@ -13,6 +16,21 @@ app.use((req, res, next) => {
 app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.use(express.static("views"));
+
+conn.query('SELECT * FROM buku', (err, rows) => {  
+  if(err) throw err;
+
+  console.log('Data received from Db:');
+  bookDatas = rows.map((row) => {
+    return {...row};
+  });
+});
+
+app.use((req, res, next) => {
+  console.log(bookDatas)
+  next();
+});
+
 
 const dataArr = [
   {
@@ -53,7 +71,7 @@ app.get("/data/:id", (req, res) => {
     title: "Data",
     id: id,
     layout: "layouts/main",
-    dataArr,
+    data: charDatas,
   });
 });
 
