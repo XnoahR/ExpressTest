@@ -2,16 +2,21 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const router = require("./router.js");
 const fs = require("fs");
-const {conn, createTable} = require("./db.js"); 
+const {getConnection, createTable} = require("./db.js"); 
 const app = express();
 charDatas = JSON.parse(fs.readFileSync("./character.json", "utf8"));
 bookDatas = [];
+let conn;
 
+getConnection((connection) => {
+  console.log("Mysql Connected...");
+  conn = connection;
+});
 
 app.set('port', process.env.PORT || 3000);
 app.use((req, res, next) => {
   console.log("Time:", Date.now());
-  createTable();
+  createTable(conn);
   next();
 });
 
