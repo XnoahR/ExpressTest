@@ -2,15 +2,15 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const router = require("./router.js");
 const fs = require("fs");
-const {getConnection, createTable} = require("./db.js"); 
+const {createTable, conn} = require("./db.js"); 
 const app = express();
 charDatas = JSON.parse(fs.readFileSync("./character.json", "utf8"));
 bookDatas = [];
-let conn;
 
-getConnection((connection) => {
+conn.connect((err) => {
+  if (err) throw err;
   console.log("Mysql Connected...");
-  conn = connection;
+  createTable(conn);
 });
 
 app.set('port', process.env.PORT || 3000);
@@ -29,6 +29,7 @@ app.use(express.static("views"));
 
 
 app.use(router);
+
 app.use((req, res, next) => {
   // writeBooks();
   next();
@@ -89,6 +90,3 @@ app.listen(app.get('port'), () => {
 });
 
 
-module.exports = {
-  getConnection,
-};
