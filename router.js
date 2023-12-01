@@ -34,6 +34,10 @@ router.get("/ambilBuku", (req, res) => {
     });
 });
 
+router.get("/ambildatajson", (req, res) => {
+    res.sendFile(__dirname + "/books.json");
+})
+
 
 
 module.exports = router;
