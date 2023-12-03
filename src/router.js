@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const app = express();
-const {conn} = require("./db.js");
+const {conn} = require("../dump/db.js");
 
 
 router.use(express.json());
