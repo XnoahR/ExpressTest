@@ -4,10 +4,11 @@ import user from "./models/userModel.js";
 const app = express();
 const port = 3000;
 
-// app.use(('/', (req, res) => createTable()
+// app.use(('/create', (req, res) => createTable()
 //     .then(() => res.send("Table created."))
 //     .catch((err) => res.send(err.message)
 //     )));
+
 
 app.get("/", (req, res) => {
   try {
@@ -33,6 +34,11 @@ app.get("/insert",(req,res)=>{
     })
 })
 
+app.get("/drop",(req,res)=>{
+    user.drop().then((result)=>{
+        res.send(result);
+    })
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
