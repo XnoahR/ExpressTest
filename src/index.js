@@ -25,19 +25,35 @@ app.get("/", (req, res) => {
 });
 
 app.get("/insert", (req, res) => {
-  user
-    .create({
-      username: "johndoe1",
+  try{
+    const checkUser = user.findAll({
+      where: {  
+        username: "johndoe1",
       email: "johndo1@gmail.com",
       password: "123456",
       role: 1,
       name: "John Doe",
       phone: "08123456789",
-    })
-    .then((result) => {
-      res.send(result);
+      }
     });
+
+    if(checkUser){
+    res.send("User already exist");
+    }else{
+  const account = user.build({
+    username: "johndoe1",
+      email: "johndo1@gmail.com",
+      password: "123456",
+      role: 1,
+      name: "John Doe",
+      phone: "08123456789",
+  });
+};
+}catch(err){
+    res.send(err.message);
+  }
 });
+  
 
 app.get("/insert2", (req, res) => {
   const account = user.build({
