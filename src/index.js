@@ -1,6 +1,10 @@
 import express from "express";
 // import {sequelize} from "./utils/db.js";
 import user from "./models/userModel.js";
+import favourite from "./models/favouriteModel.js";
+import animal from "./models/animalModel.js";
+import post from "./models/postModel.js";
+
 const app = express();
 const port = 3000;
 

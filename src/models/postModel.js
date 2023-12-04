@@ -1,5 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../utils/db.js";
+import animal from "./animalModel.js";
+import User from "./userModel.js";
+
+
 
 const post = sequelize.define(
     "post",
@@ -37,3 +41,10 @@ const post = sequelize.define(
             
         }
 );
+
+post.belongsTo(User, {foreignKey: "id_user"});
+post.belongsTo(animal, {foreignKey: "id_animal"});
+
+sequelize.sync();
+
+export default post;
