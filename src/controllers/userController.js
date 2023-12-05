@@ -1,23 +1,27 @@
-import favourite from "../models/favouriteModel.js";
-import post from "../models/postModel.js";
 import user from "../models/userModel.js";
-import sequelize from "../utils/db.js";
 
-const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const checkUser = await user.findOne({
-        where: {
-            email: email,
-            password: password,
-        },
-        });
-        if (checkUser) {
-        res.send(checkUser);
-        } else {
-        res.send("User not found");
-        }
-    } catch (err) {
-        res.send(err.message);
-    }
-    }
+const profile = (req, res) => {
+  user.findAll().then((result) => {
+    res.send(result);
+  });
+};
+
+
+
+const createProfile = (req, res) => {
+  const { username, email, password } = req.body;
+
+  user
+    .create({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      role: 1,
+      name: "John Doe",
+    })
+    .then((result) => {
+      res.send(result);
+    });
+};
+
+export { profile, createProfile };
