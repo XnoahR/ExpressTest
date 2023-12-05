@@ -7,6 +7,8 @@ import post from "./models/postModel.js";
 import sequelize from "./utils/db.js";
 
 import userRoutes from "./routes/userRoute.js";
+import postRoutes from "./routes/postRoute.js";
+
 
 const app = express();
 const port = 3000;
@@ -17,8 +19,8 @@ app.use(express.json());
 //     .catch((err) => res.send(err.message)
 //     )));
 
-app.use('/users', userRoutes);
-
+app.use('/user', userRoutes);
+app.use('/post', postRoutes);
 
 app.get("/", (req, res) => {
   try {

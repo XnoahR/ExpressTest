@@ -12,7 +12,7 @@ const post = sequelize.define(
       autoIncrement: true,
       allowNull: false,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },

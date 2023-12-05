@@ -23,6 +23,10 @@ const animal = sequelize.define("animal", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+},
+{
+  tableName: "animal",
+  timestamps: false,
 });
 
 sequelize.sync();
