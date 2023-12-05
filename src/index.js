@@ -4,6 +4,7 @@ import user from "./models/userModel.js";
 import favourite from "./models/favouriteModel.js";
 import animal from "./models/animalModel.js";
 import post from "./models/postModel.js";
+import sequelize from "./utils/db.js";
 
 const app = express();
 const port = 3000;
@@ -100,10 +101,10 @@ app.get("/deleteadmin", (req, res) => {
   res.send("Admin deleted");
 });
 
-app.get("/drop", (req, res) => {
-  user.drop().then((result) => {
-    res.send(result);
-  });
+app.get("/drop", async (req, res) => {
+  //drop all tables in the database if exist
+  await sequelize.drop(); 
+  res.send("All tables dropped");
 });
 
 app.get("/user/:id", (req, res) => {

@@ -15,6 +15,9 @@ const animal = sequelize.define("animal", {
   breed: {
     type: DataTypes.STRING,
     allowNull: true,
+    set(value) {
+      this.setDataValue("breed", value.toLowerCase());
+    } 
   },
   fur: {
     type: DataTypes.STRING,

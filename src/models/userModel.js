@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../utils/db.js";
 
-const User = sequelize.define(
-  "User",
+const user = sequelize.define(
+  "user",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -18,7 +18,12 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      email: true,
+      validate: {
+        isEmail: true,
+      },
+      set(value) {
+        this.setDataValue("email", value.toLowerCase());
+      },
     },
     password: {
       type: DataTypes.STRING,
@@ -41,6 +46,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    picture: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     tableName: "user",
@@ -49,4 +58,4 @@ const User = sequelize.define(
 
 sequelize.sync();
 
-export default User;
+export default user;
