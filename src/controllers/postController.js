@@ -71,4 +71,17 @@ const deletePost = (req, res) => {
   res.send(`Post deleted. ID: ${id}`);
 };
 
-export { getPost, createPost, findPost, editPost, updatePost, deletePost };
+const addFavourite = (req, res) => {
+    const id_user = req.body.id_user;
+    const id_post = req.body.id_post;
+    favourite
+      .create({
+        id_user: id_user,
+        id_post: id_post,
+      })
+      .then((result) => {
+        res.send(result);
+      });
+  };
+
+export { getPost, createPost, findPost, editPost, updatePost, deletePost, addFavourite };

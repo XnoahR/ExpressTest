@@ -8,10 +8,13 @@ import { getPost, createPost, findPost, editPost, updatePost, deletePost } from 
 const router = Express.Router();
 
 router.get("/", getPost);
-router.post("/create", createPost); 
 router.get("/:id", findPost);
 router.get("/edit/:id", editPost);
+router.post("/favorite", )
+router.post("/create", createPost); 
 router.patch("/edit/:id", updatePost);
 router.delete("/:id", deletePost);
+
+
 
 export default router;
