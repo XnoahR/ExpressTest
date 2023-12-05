@@ -1,18 +1,20 @@
 import Express from "express";
 import user from "../models/userModel.js";
 import { where } from "sequelize";
+import favourite from "../models/favouriteModel.js";
+
 const app = Express();
 
 app.use(Express.json());
 
 const profile = (req, res) => {
-  user.findAll(
-    {
-        where: { role: 1 },
-    }
-  ).then((result) => {
-    res.send(result);
-  });
+  user
+    .findAll({
+      where: { role: 1 },
+    })
+    .then((result) => {
+      res.send(result);
+    });
 };
 
 const createProfile = (req, res) => {
@@ -71,7 +73,16 @@ const updateProfile = (req, res) => {
       where: { id: id },
     }
   );
-    res.send("Data updated");
+  res.send("Data updated");
 };
 
-export { profile, createProfile, findProfile, editProfile, updateProfile };
+const userFavourite = (req, res) => {
+  favourite
+    .findAll({
+      where: { id_user: req.params.id },
+    })
+    .then((result) => {
+      res.send(result);
+    });
+};
+export { profile, createProfile, findProfile, editProfile, updateProfile, userFavourite };
