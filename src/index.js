@@ -6,8 +6,12 @@ import animal from "./models/animalModel.js";
 import post from "./models/postModel.js";
 import sequelize from "./utils/db.js";
 
+
+
 import userRoutes from "./routes/userRoute.js";
 import postRoutes from "./routes/postRoute.js";
+import authRoutes from "./routes/authRoute.js";
+
 
 
 const app = express();
@@ -16,6 +20,7 @@ const port = 3000;
 app.use(express.json());
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
+app.use('/account', authRoutes);
 
 app.use((req, res, next) => {
   res.status(404).send("Page not found!");
