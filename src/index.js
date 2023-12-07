@@ -20,7 +20,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use('/user',authMiddleware, userRoutes);
-app.use('/post', postRoutes);
+app.use('/post',authMiddleware, postRoutes);
 app.use('/account', authRoutes);
 
 app.use((req, res, next) => {
