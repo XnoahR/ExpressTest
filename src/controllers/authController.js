@@ -7,49 +7,58 @@ const app = Express();
 
 app.use(Express.json());
 
+const signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
+
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user.id);
+  const cookieOptions = {
+    expire: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  res.cookie("jwt", token, cookieOptions);
+  res.status(statusCode).json({
+    status: "Success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 const login = (req, res) => {
   const { email, password } = req.body;
-
-  user
-    .findAll({
-      where: { email: email, password: password },
-    })
-    .then((result) => {
-      if (result.length > 0) {
-        const id = result[0].id;
-        const token = jwt.sign(
-          {
-            id: id,
-            email: email,
-            username: result[0].username,
-          },
-          process.env.SECRET,
-          { expiresIn: 60 * 60 * 1 } // expires in 5min
-        );
-        return res.json({
-          auth: true,
-          status: "Success",
-          message: "logged in",
-          token: token,
-          secret: process.env.SECRET,
-        });
-      } else {
-        res.status(401).json({
-          auth: false,
-          status: "Error",
-          message: "Email or password is incorrect",
-        });
-      }
-    });
+  user.findOne({ where: { email: email } }).then((result) => {
+    if (!result || result.password !== password) {
+      res.status(401).json({
+        status: "Error",
+        message: "Invalid email or password",
+      });
+    } else {
+      createSendToken(result, 200, res);
+    }
+  });
 };
 
 const logout = (req, res) => {
-  res.clearCookie("jwt");
-  res.redirect("/");
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({
+    status: "Success",
+    message: "Logged out",
+  });
 };
 
-const checkJwt = (req,res) => {
-  const jwt = req.cookies.jwt;
-  res.send(jwt);
-}
-export { login, logout, checkJwt};
+// const checkJwt = (req,res) => {
+//   const jwt = req.cookies.jwt;
+//   res.send(jwt);
+// }
+export { login, logout };

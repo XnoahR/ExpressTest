@@ -11,6 +11,7 @@ import sequelize from "./utils/db.js";
 import userRoutes from "./routes/userRoute.js";
 import postRoutes from "./routes/postRoute.js";
 import authRoutes from "./routes/authRoute.js";
+import authMiddleware from "./middlewares/authMiddleware.js";
 
 
 
@@ -18,7 +19,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use('/user', userRoutes);
+app.use('/user',authMiddleware, userRoutes);
 app.use('/post', postRoutes);
 app.use('/account', authRoutes);
 
