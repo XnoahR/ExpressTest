@@ -2,7 +2,7 @@ import Express from "express";
 import user from "../models/userModel.js";
 import animal from "../models/animalModel.js";
 import post from "../models/postModel.js";
-import favourite from "../models/favouriteModel.js";
+// import favourite from "../models/favouriteModel.js";
 
 import { getPost, createPost, findPost, editPost, updatePost, deletePost } from "../controllers/postController.js";
 const router = Express.Router();

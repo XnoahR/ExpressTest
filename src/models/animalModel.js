@@ -21,7 +21,7 @@ const animal = sequelize.define("animal", {
   },
   fur: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 },
 {

@@ -1,7 +1,7 @@
 import Express from "express";
 import user from "../models/userModel.js";
 import { where } from "sequelize";
-import favourite from "../models/favouriteModel.js";
+
 
 const app = Express();
 
@@ -76,13 +76,13 @@ const updateProfile = (req, res) => {
   res.send("Data updated");
 };
 
-const userFavourite = (req, res) => {
-  favourite
-    .findAll({
-      where: { id_user: req.params.id },
-    })
-    .then((result) => {
-      res.send(result);
-    });
-};
-export { profile, createProfile, findProfile, editProfile, updateProfile, userFavourite };
+// const userFavourite = (req, res) => {
+//   favourite
+//     .findAll({
+//       where: { id_user: req.params.id },
+//     })
+//     .then((result) => {
+//       res.send(result);
+//     });
+// };
+export { profile, createProfile, findProfile, editProfile, updateProfile};

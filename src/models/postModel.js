@@ -24,6 +24,14 @@ const post = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    breed:{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    post_picture: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
