@@ -17,22 +17,6 @@ const profile = (req, res) => {
     });
 };
 
-const createProfile = (req, res) => {
-  const { username, email, password } = req.body;
-
-  user
-    .create({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      role: 1,
-      name: "John Doe",
-    })
-    .then((result) => {
-      res.send(result);
-    });
-};
-
 const findProfile = (req, res) => {
   const id = req.params.id;
   user
@@ -85,4 +69,4 @@ const updateProfile = (req, res) => {
 //       res.send(result);
 //     });
 // };
-export { profile, createProfile, findProfile, editProfile, updateProfile};
+export { profile, findProfile, editProfile, updateProfile};

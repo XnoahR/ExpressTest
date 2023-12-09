@@ -32,6 +32,25 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+
+const register = (req, res) => {
+  const { username, email, password } = req.body;
+
+  user
+    .create({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      role: 1,
+      name: "John Doe",
+    })
+    .then((result) => {
+      res.send(result);
+    });
+};
+
+
+
 const login = (req, res) => {
   const { email, password } = req.body;
   user.findOne({ where: { email: email } }).then((result) => {
@@ -61,4 +80,4 @@ const logout = (req, res) => {
 //   const jwt = req.cookies.jwt;
 //   res.send(jwt);
 // }
-export { login, logout };
+export { login, logout,register };
