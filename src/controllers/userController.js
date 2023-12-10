@@ -18,7 +18,7 @@ const profile = (req, res) => {
 };
 
 const findProfile = (req, res) => {
-  const id = req.params.id;
+  const id = req.user.id;
   user
     .findAll({
       where: { id: id },
@@ -30,7 +30,7 @@ const findProfile = (req, res) => {
 };
 
 const editProfile = (req, res) => {
-  const id = req.params.id;
+  const id = req.user.id;
   user
     .findAll({
       where: { id: id },
@@ -43,14 +43,13 @@ const editProfile = (req, res) => {
 
 const updateProfile = (req, res) => {
   const { username, email, password } = req.body;
-  const id = req.params.id;
+  const id = req.user.id;
 
   user.update(
     {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      role: 1,
       name: "John Doe",
     },
     {

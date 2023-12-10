@@ -44,6 +44,8 @@ app.use("/user", authMiddleware, userRoutes);
 app.use("/post", authMiddleware, postRoutes);
 app.use("/account", authRoutes);
 
+
+
 app.get("/admin", (req, res) => {
   user.findOrCreate({
     where: {

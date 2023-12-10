@@ -18,6 +18,7 @@ const createPost = (req, res) => {
       status: 1,
       id_user: req.body.id_user,
       id_animal: req.body.id_animal,
+      post_picture: 'u'
     })
     .then((result) => {
       res
@@ -37,6 +38,23 @@ const findPost = (req, res) => {
     .then((result) => {
       res.send(result);
     });
+};
+
+const userPost = (req, res) => {
+  const user = req.user.id;
+// I want to get ID from user
+// json: {
+//  "id": 1,
+//  "exp": 1625241600,
+//}
+  post
+    .findAll({
+      where: { id_user: user },
+    })
+    .then((result) => {
+      res.send(result);
+    });
+
 };
 
 const editPost = (req, res) => {
@@ -84,4 +102,4 @@ const addFavourite = (req, res) => {
       });
   };
 
-export { getPost, createPost, findPost, editPost, updatePost, deletePost, addFavourite };
+export { getPost, createPost, findPost, editPost, updatePost, deletePost, addFavourite, userPost };

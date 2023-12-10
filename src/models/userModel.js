@@ -49,6 +49,7 @@ const user = sequelize.define(
     profile_picture: {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: "https://storage.googleapis.com/petmebucket/user_data/paws.png"
     },
   },
   {
