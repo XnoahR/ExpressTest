@@ -51,9 +51,18 @@ const user = sequelize.define(
       allowNull: true,
       defaultValue: "https://storage.googleapis.com/petmebucket/user_data/paws.png"
     },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: "user",
+    timestamps: false,
   }
 );
 
