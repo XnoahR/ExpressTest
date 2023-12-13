@@ -16,17 +16,17 @@ app.use(fileUpload());
 app.use(Express.json());
 app.use(cors());
 
-const profile = (req, res) => {
-  user
-    .findAll({
-      where: { role: 1 },
-    })
-    .then((result) => {
-      res.send(result);
-    });
-};
+// const profile = (req, res) => {
+//   user
+//     .findAll({
+//       where: { role: 1 },
+//     })
+//     .then((result) => {
+//       res.send(result);
+//     });
+// };
 
-const findProfile = (req, res) => {
+const profile = (req, res) => {
   const id = req.user.id;
   user
     .findAll({
@@ -49,23 +49,47 @@ const editProfile = (req, res) => {
       res.send(result);
     });
 };
+
 const updateProfile = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email,name, password } = req.body;
     const id = req.user.id;
     const file = req.files;
-    
-    // Fetch the user record
-    const currentUser = await user.findByPk(id);
-    
+    var newProfilePicture = user.findByPk(id).profile_picture;
+    if (file) {
+      const fileName = file.file.name;
+      const ext = path.extname(fileName);
+      const newFileName = md5(new Date().getTime()) + ext;
+      newProfilePicture = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/${newFileName}`;
+      file.file.mv(`./public/img/${newFileName}`, async (err) => {
+        if(err) return res.status(500).json({ message: "Internal Server Error" });
+          try{
+            await bucket.upload(
+              `./public/img/${newFileName}`,
+              {
+                destination: `user_data/${newFileName}`,
+                public: true,
+                metadata: {
+                  contentType: "image/png",
+                },
+              }
+            );
+            fs.unlinkSync(`./public/img/${newFileName}`);
+          }catch(error){
+            console.error(error);
+            res.status(500).json({ message: "Internal Server Error" });
+          }
+      });
+
+    }
 
     // Update the user record
     await user.update(
       {
-        username: username,
-        email: email,
-        password: password,
-        name: "John Doe",
+        username,
+        email,
+        name,
+        password,
         profile_picture: newProfilePicture,
       },
       {
@@ -76,10 +100,10 @@ const updateProfile = async (req, res) => {
     res.json({
       message: "Profile updated",
       data: {
-        username: username,
-        email: email,
-        password: password,
-        name: "John",
+        username,
+        email,
+        name,
+        password,
         profile_picture: newProfilePicture,
       },
     });
@@ -148,4 +172,4 @@ const uploadFile = async (req, res) => {
 //       res.send(result);
 //     });
 // };
-export { profile, findProfile, editProfile, updateProfile, uploadFile, upload };
+export { profile, editProfile, updateProfile,  };
