@@ -53,43 +53,11 @@ const updateProfile = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const id = req.user.id;
-
+    const file = req.files;
+    
     // Fetch the user record
     const currentUser = await user.findByPk(id);
-    const oldProfilePicture = currentUser.profile_picture;
-
-    let newProfilePicture = oldProfilePicture; // Default to the old picture
-
-    if (req.files && req.files.profile_picture) {
-      const file = req.files.profile_picture;
-      const fileSize = file.data.length;
-      const ext = path.extname(file.name);
-      const fileName = md5(new Date().getTime()) + ext;
-      const url = `https://storage.googleapis.com/petmebucket/user_data/${fileName}`;
-      const allowedExt = [".png", ".jpg", ".jpeg"];
-
-      if (!allowedExt.includes(ext.toLowerCase())) {
-        return res.status(422).json({ message: "File type not allowed" });
-      }
-
-      if (fileSize > 5000000) {
-        return res.status(422).json({ message: "File size too large" });
-      }
-
-      newProfilePicture = fileName;
-
-      // Upload the file to Google Cloud Storage
-      await bucket.upload(
-        file.tempFilePath,
-        {
-          destination: `user_data/${fileName}`,
-          public: true,
-          metadata: {
-            contentType: "image/png",
-          },
-        }
-      );
-    }
+    
 
     // Update the user record
     await user.update(
@@ -138,7 +106,7 @@ const uploadFile = async (req, res) => {
   const fileSize = file.data.length;
   const ext = path.extname(fileName);
   const newFileName = md5(new Date().getTime()) + ext;
-  const url = `${req.protocol}://${req.get("host")}/img/${newFileName}`;
+  const url = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/${newFileName}`;
   const allowedExt = [".png", ".jpg", ".jpeg"];
 
   if(!allowedExt.includes(ext.toLowerCase())){
@@ -148,9 +116,21 @@ const uploadFile = async (req, res) => {
     return res.status(422).json({ message: "File size too large" });
   }
 
+  
   file.mv(`./public/img/${newFileName}`, async (err) => {
   if(err) return res.status(500).json({ message: "Internal Server Error" });
     try{
+      await bucket.upload(
+        `./public/img/${newFileName}`,
+        {
+          destination: `user_data/${newFileName}`,
+          public: true,
+          metadata: {
+            contentType: "image/png",
+          },
+        }
+      );
+      fs.unlinkSync(`./public/img/${newFileName}`);
       res.json({ fileName: newFileName, filePath: url });
     }catch(error){
       console.error(error);

@@ -15,6 +15,12 @@ import postRoutes from "./routes/postRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import authMiddleware from "./middlewares/authMiddleware.js";
 
+import { fileURLToPath } from 'url';
+import path from 'path';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 // const storage = new Storage({
 //   projectId: "petme-406008",
 //   keyFilename: process.env.KEY_FILE_PATH,
@@ -26,9 +32,22 @@ const port = 3000;
 
 app.use(express.json());
 app.use(fileUpload());
-app.use("/user", authMiddleware, userRoutes);
+app.use("/user",  userRoutes);
 app.use("/post", authMiddleware, postRoutes);
 app.use("/account", authRoutes);
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+app.post("/", (req, res) => {
+  if(req.files){
+    console.log(req.files);
+    const file = req.files.file;
+    const fileName = file.name;
+    console.log(fileName);
+    
+  }
+});
 
 app.post("/fileuploader", async (req, res) => {
   const files = req.files;
