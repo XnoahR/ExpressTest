@@ -7,7 +7,8 @@ import post from "./models/postModel.js";
 import sequelize from "./utils/db.js";
 // import bucket from @google-cloud/storage;
 import "dotenv/config";
-import bucket from "./utils/bucket.js";
+import {bucket, folderName} from "./utils/bucket.js";
+import fileUpload from "express-fileupload";
 
 import userRoutes from "./routes/userRoute.js";
 import postRoutes from "./routes/postRoute.js";
@@ -24,10 +25,15 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(fileUpload());
 app.use("/user", authMiddleware, userRoutes);
 app.use("/post", authMiddleware, postRoutes);
 app.use("/account", authRoutes);
 
+app.post("/fileuploader", async (req, res) => {
+  const files = req.files;
+  res.send(files);
+});
 
 
 app.get("/admin", (req, res) => {

@@ -1,18 +1,18 @@
 import Express from "express";
-import FileUpload from "express-fileupload";
+import fileUpload from "express-fileupload";
 import cors from "cors";  // Cross Origin Resource Sharing    
 import user from "../models/userModel.js";
 import { where } from "sequelize";
-import bucket from "../utils/bucket.js";
+import {bucket, folderName} from "../utils/bucket.js";
 import md5 from "md5";
 import fs from "fs";
 import path from "path";
-
+import multer from "multer";
 
 const app = Express();
 
 
-app.use(FileUpload());
+app.use(fileUpload());
 app.use(Express.json());
 app.use(cors());
 
@@ -121,10 +121,43 @@ const updateProfile = async (req, res) => {
   }
 };
 
-const uploadFile = (req,res) => {
-  file = req.file;
-  console.log(file);
-}
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
+  },
+});
+
+
+const uploadFile = async (req, res) => {
+  if(req.files === null){
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  const file = req.files.file;
+  const fileName = file.name;
+  const fileSize = file.data.length;
+  const ext = path.extname(fileName);
+  const newFileName = md5(new Date().getTime()) + ext;
+  const url = `${req.protocol}://${req.get("host")}/img/${newFileName}`;
+  const allowedExt = [".png", ".jpg", ".jpeg"];
+
+  if(!allowedExt.includes(ext.toLowerCase())){
+    return res.status(422).json({ message: "File type not allowed" });
+  }
+  if(fileSize > 5000000){
+    return res.status(422).json({ message: "File size too large" });
+  }
+
+  file.mv(`./public/img/${newFileName}`, async (err) => {
+  if(err) return res.status(500).json({ message: "Internal Server Error" });
+    try{
+      res.json({ fileName: newFileName, filePath: url });
+    }catch(error){
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+};
 
 // const userFavourite = (req, res) => {
 //   favourite
@@ -135,4 +168,4 @@ const uploadFile = (req,res) => {
 //       res.send(result);
 //     });
 // };
-export { profile, findProfile, editProfile, updateProfile };
+export { profile, findProfile, editProfile, updateProfile, uploadFile, upload };

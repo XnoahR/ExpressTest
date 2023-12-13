@@ -19,4 +19,5 @@ const storage = new Storage({
     },
   });
 const bucket = storage.bucket("petmebucket");
-export default bucket;  
+const folderName = "user_data";
+export { bucket, folderName };
