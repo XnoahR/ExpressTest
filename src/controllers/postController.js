@@ -10,22 +10,24 @@ const getPost = (req, res) => {
 };
 
 const createPost = (req, res) => {
-  const { title, id_user, id_animal } = req.body;
+  const { title, id_animal,description, latitude, longitude } = req.body;
+  const id_user = req.user.id;  
   post
     .create({
       title: req.body.title,
       upload_date: new Date(),
       status: 1,
-      id_user: req.body.id_user,
+      id_user: id_user,
       id_animal: req.body.id_animal,
-      post_picture: 'u'
+      description: req.body.description,  
+      latitude: req.body.latitude,
+      longitude: req.body.longitude,
+      post_picture: 'xyz'
     })
     .then((result) => {
       res
         .status(201)
-        .send(
-          `Post created. ID: ${result.id}, Title: ${result.title}, Upload Date: ${result.upload_date}, Status: ${result.status}, ID User: ${result.id_user}, ID Animal: ${result.id_animal}`
-        );
+        .json({ message: "Post created",data: result });
     });
 };
 
