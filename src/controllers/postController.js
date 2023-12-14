@@ -30,6 +30,7 @@ const createPost = (req, res) => {
 };
 
 const findPost = (req, res) => {
+  const user = req.user.id;
   const id = req.params.id;
   post
     .findAll({

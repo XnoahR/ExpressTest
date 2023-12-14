@@ -2,6 +2,7 @@ import Express from "express";
 import fileUpload from "express-fileupload";
 import cors from "cors";  // Cross Origin Resource Sharing    
 import user from "../models/userModel.js";
+import favourite from "../models/favouriteModel.js";    
 import { where } from "sequelize";
 import {bucket, folderName} from "../utils/bucket.js";
 import md5 from "md5";
@@ -26,6 +27,7 @@ app.use(cors());
 //     });
 // };
 
+//Buat ke halaman profile 
 const profile = (req, res) => {
   const id = req.user.id;
   user
@@ -38,6 +40,7 @@ const profile = (req, res) => {
     });
 };
 
+//Buat ke halaman edit profile
 const editProfile = (req, res) => {
   const id = req.user.id;
   user
@@ -46,10 +49,11 @@ const editProfile = (req, res) => {
     })
     .then((result) => {
       //json
-      res.send(result);
+      res.json(result);
     });
 };
 
+//Buat update profile
 const updateProfile = async (req, res) => {
   try {
     const { username, email,name, password } = req.body;
@@ -163,13 +167,39 @@ const uploadFile = async (req, res) => {
 });
 };
 
-// const userFavourite = (req, res) => {
-//   favourite
-//     .findAll({
-//       where: { id_user: req.params.id },
-//     })
-//     .then((result) => {
-//       res.send(result);
-//     });
-// };
-export { profile, editProfile, updateProfile,  };
+//Menambahkan favourite
+const addFavourite = (req, res) => {
+  const id_user = req.user.id;
+  const id_post = req.body.id_post;
+  favourite
+    .create({
+      id_user: id_user,
+      id_post: id_post,
+    })
+    .then((result) => {
+      res.status(200).json({ message: "Favourite added", data: result });
+    });
+}   
+
+//Mengakses favourite
+const userFavourite = (req, res) => {
+  const id_user = req.user.id;
+  favourite
+    .findAll({
+      where: { id_user: id_user },
+    })
+    .then((result) => {
+      res.json(result);
+    });
+};
+
+//Menghapus favourite
+const deleteFavourite = (req, res) => {
+  const id = req.params.id;
+  favourite.destroy({
+    where: { id: id },
+  });
+  res.send(`Favourite deleted. ID: ${id}`);
+};
+
+export { profile, editProfile, updateProfile, addFavourite, userFavourite, deleteFavourite };

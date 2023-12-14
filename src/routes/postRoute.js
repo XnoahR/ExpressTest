@@ -5,6 +5,7 @@ import post from "../models/postModel.js";
 // import favourite from "../models/favouriteModel.js";
 
 import { getPost, createPost, findPost, editPost, updatePost, deletePost,userPost } from "../controllers/postController.js";
+import { addFavourite } from "../controllers/userController.js";
 const router = Express.Router();
 
 router.get("/", getPost);
@@ -12,6 +13,7 @@ router.get("find/:id", findPost);
 router.get("/my/collection", userPost);
 router.get("/edit/:id", editPost);
 router.post("/create", createPost); 
+router.post("/favourite/:id", addFavourite);
 router.patch("/edit/:id", updatePost);
 router.delete("/:id", deletePost);
 

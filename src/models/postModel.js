@@ -40,6 +40,19 @@ const post = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    latitude: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    longitude: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+
   },
   {
     tableName: "post",
