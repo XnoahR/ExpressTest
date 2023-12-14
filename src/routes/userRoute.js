@@ -7,8 +7,7 @@ import {
   editProfile,
   updateProfile,
   userFavourite,
-  addFavourite,
-  deleteFavourite,  
+  addFavourite  
   
 } from "../controllers/userController.js";
 import multer from "multer";
@@ -19,11 +18,11 @@ const router = Express.Router();
 
 // router.get("/", );
 
-router.get("/:id", profile);
+router.get("/", profile);
 router.get("/edit/:id", editProfile);
+router.get("/fav", userFavourite);
 router.patch("/edit/:id", updateProfile);
-router.get("/favourite", userFavourite);
-router.delete("/favourite/:id", deleteFavourite);
+
 // router.get("/favourite/:id",userFavourite );
 
 

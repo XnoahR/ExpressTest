@@ -1,5 +1,6 @@
 import Express from "express";
 import post from "../models/postModel.js";
+import favourite from "../models/favouriteModel.js";
 
 const router = Express.Router();
 
@@ -67,11 +68,12 @@ const editPost = (req, res) => {
       where: { id: id },
     })
     .then((result) => {
-      res.send(result);
+      res.json(result);
     });
 };
 
 const updatePost = (req, res) => {
+  const id_user = req.user.id;
   const { title } = req.body;
   const id = req.params.id;
   post.update(
@@ -79,30 +81,56 @@ const updatePost = (req, res) => {
       title: req.body.title,
       date: new Date(),
     },
-    { where: { id: id } }
+    { where: { id: id,
+    id_user: id_user } }
   );
   res.send(`Post updated. ID: ${id}, Title: ${title}`);
 };
 
-const deletePost = (req, res) => {
+const deletePost = async (req, res) => {
   const id = req.params.id;
-  post.destroy({
-    where: { id: id },
+  const id_user = req.user.id;
+  try{
+    await favourite.destroy({
+      where: { id_post: id },
+    })
+  await post.destroy({
+    where: { id: id, id_user: id_user },
   });
   res.send(`Post deleted. ID: ${id}`);
+}catch(err){
+  res.send(err.message);  
+}
 };
 
 const addFavourite = (req, res) => {
-    const id_user = req.body.id_user;
-    const id_post = req.body.id_post;
+    
+    const id = req.params.id
+    const id_user = req.user.id;
+    
     favourite
       .create({
         id_user: id_user,
-        id_post: id_post,
+        id_post: id,
       })
       .then((result) => {
         res.send(result);
       });
   };
 
-export { getPost, createPost, findPost, editPost, updatePost, deletePost, addFavourite, userPost };
+  const deleteFavourite = async (req, res) => {
+    const id_post = req.params.id;
+    const id_user = req.user.id;
+    console.log(id_post,id_user);
+    try{
+    await favourite.destroy({
+      where: { id_post: id_post,
+      id_user: id_user },
+    });
+    res.send(`Favourite deleted. ID: ${id_post}`);
+  }catch(err){
+    res.send(err.message);
+  }
+  };
+
+export { getPost, createPost, findPost, editPost, updatePost, deletePost, addFavourite,deleteFavourite, userPost };

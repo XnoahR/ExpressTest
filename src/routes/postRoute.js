@@ -4,14 +4,15 @@ import animal from "../models/animalModel.js";
 import post from "../models/postModel.js";
 // import favourite from "../models/favouriteModel.js";
 
-import { getPost, createPost, findPost, editPost, updatePost, deletePost,userPost } from "../controllers/postController.js";
-import { addFavourite } from "../controllers/userController.js";
+import { getPost, createPost, findPost, editPost, updatePost, deletePost,userPost,addFavourite,deleteFavourite } from "../controllers/postController.js";
+
 const router = Express.Router();
 
 router.get("/", getPost);
-router.get("find/:id", findPost);
+router.get("/find/:id", findPost);
 router.post("/find/:id", addFavourite);
-router.get("/my/collection", userPost);
+router.delete("/favourite/:id", deleteFavourite);
+router.get("/my", userPost);
 router.get("/edit/:id", editPost);
 router.post("/create", createPost); 
 router.patch("/edit/:id", updatePost);

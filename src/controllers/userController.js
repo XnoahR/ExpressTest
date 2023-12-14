@@ -138,6 +138,7 @@ const uploadFileToBucket = async (file, newFileName) => {
 const addFavourite = (req, res) => {
   const id_user = req.user.id;
   const id_post = req.body.id_post;
+  try{
   favourite
     .create({
       id_user: id_user,
@@ -146,11 +147,15 @@ const addFavourite = (req, res) => {
     .then((result) => {
       res.status(200).json({ message: "Favourite added", data: result });
     });
+  }catch{
+    res.send(err.message);
+  }
 };
 
 //Mengakses favourite
 const userFavourite = (req, res) => {
   const id_user = req.user.id;
+  try{
   favourite
     .findAll({
       where: { id_user: id_user },
@@ -158,16 +163,13 @@ const userFavourite = (req, res) => {
     .then((result) => {
       res.json(result);
     });
+  }catch(err){
+    res.send(err.message);
+  }
 };
 
 //Menghapus favourite
-const deleteFavourite = (req, res) => {
-  const id = req.params.id;
-  favourite.destroy({
-    where: { id: id },
-  });
-  res.send(`Favourite deleted. ID: ${id}`);
-};
+
 
 export {
   profile,
@@ -175,5 +177,5 @@ export {
   updateProfile,
   addFavourite,
   userFavourite,
-  deleteFavourite,
+  
 };
