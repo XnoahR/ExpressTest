@@ -11,8 +11,9 @@ const getPost = (req, res) => {
 };
 
 const createPost = (req, res) => {
-  const { title, id_animal,description, latitude, longitude } = req.body;
+  const { title, id_animal,description,breed, latitude, longitude,post_picture } = req.body;
   const id_user = req.user.id;  
+  
   post
     .create({
       title: req.body.title,
@@ -20,10 +21,11 @@ const createPost = (req, res) => {
       status: 1,
       id_user: id_user,
       id_animal: req.body.id_animal,
-      description: req.body.description,  
+      description: req.body.description, 
+      breed: req.body.breed,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
-      post_picture: 'xyz'
+      post_picture: req.body.post_picture,
     })
     .then((result) => {
       res
