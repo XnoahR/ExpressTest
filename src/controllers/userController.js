@@ -3,7 +3,6 @@ import fileUpload from "express-fileupload";
 import cors from "cors"; // Cross Origin Resource Sharing
 import user from "../models/userModel.js";
 import favourite from "../models/favouriteModel.js";
-import { where } from "sequelize";
 import { bucket, folderName } from "../utils/bucket.js";
 import md5 from "md5";
 import fs from "fs";
@@ -18,15 +17,7 @@ app.use(fileUpload());
 app.use(Express.json());
 app.use(cors());
 
-// const profile = (req, res) => {
-//   user
-//     .findAll({
-//       where: { role: 1 },
-//     })
-//     .then((result) => {
-//       res.send(result);
-//     });
-// };
+
 
 //Buat ke halaman profile
 const profile = (req, res) => {
@@ -66,6 +57,14 @@ const updateProfile = async (req, res) => {
       const fileName = file.file.name;
       const ext = path.extname(fileName);
       const newFileName = md5(new Date().getTime()) + ext;
+      const fileSize = file.file.size;
+      const allowedFileTypes = /jpeg|jpg|png/;
+      if(!allowedFileTypes.test(path.extname(fileName).toLowerCase())){
+        res.status(400).json({ message: "Invalid file type" });
+      }
+      if(fileSize > 5 * 1024 * 1024){
+        res.status(400).json({ message: "File size too large" });
+      }
       newProfilePicture = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/rsz${newFileName}`;
 
       await uploadFileToBucket(file.file, newFileName); // Separate function for file upload
@@ -111,18 +110,18 @@ const upload = multer({
 
 const uploadFileToBucket = async (file, newFileName) => {
   const rszFileName = `rsz${newFileName}`
+  
   return new Promise((resolve, reject) => {
     file.mv(`./public/img/${newFileName}`, async (err) => {
       if (err) {
         console.error(err);
         reject("Error uploading file");
       }
-      
       try {
+     
         await sharp(`./public/img/${newFileName}`)
-          .resize(256, 256)
+          .resize(512, 512)
           .toFile(`./public/img/${rszFileName}`);
-          // fs.unlinkSync(`./public/img/${newFileName}`);
         await bucket.upload(`./public/img/${rszFileName}`, {
           destination: `user_data/${rszFileName}`,
           public: true,
@@ -130,6 +129,7 @@ const uploadFileToBucket = async (file, newFileName) => {
             contentType: "image/png",
           },
         });
+        fs.unlinkSync(`./public/img/${newFileName}`);
 
         resolve();
       } catch (error) {

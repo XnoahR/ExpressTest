@@ -40,8 +40,16 @@ const createPost = async (req, res) => {
     const fileName = file.file.name; 
     const ext = path.extname(fileName);
     const newFileName = md5(new Date().getTime()) + ext;
-    const rszFileName = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/rsz${newFileName}`;
+    const rszFileName = `https://storage.googleapis.com/petmebucket/user_data/rsz${newFileName}`;
     const folder = `./public/images/${rszFileName}`;
+    const fileSize = file.file.size;
+      const allowedFileTypes = /jpeg|jpg|png/;
+      if(!allowedFileTypes.test(path.extname(fileName).toLowerCase())){
+        res.status(400).json({ message: "Invalid file type" });
+      }
+      if(fileSize > 12 * 1024 * 1024){
+        res.status(400).json({ message: "File size too large" });
+      }
     
     // Adjust the file handling function based on your actual file handling approach
     await uploadFileToBucket(file.file, newFileName);
