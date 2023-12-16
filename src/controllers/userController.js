@@ -17,8 +17,6 @@ app.use(fileUpload());
 app.use(Express.json());
 app.use(cors());
 
-
-
 //Buat ke halaman profile
 const profile = (req, res) => {
   const id = req.user.id;
@@ -59,10 +57,10 @@ const updateProfile = async (req, res) => {
       const newFileName = md5(new Date().getTime()) + ext;
       const fileSize = file.file.size;
       const allowedFileTypes = /jpeg|jpg|png/;
-      if(!allowedFileTypes.test(path.extname(fileName).toLowerCase())){
+      if (!allowedFileTypes.test(path.extname(fileName).toLowerCase())) {
         res.status(400).json({ message: "Invalid file type" });
       }
-      if(fileSize > 5 * 1024 * 1024){
+      if (fileSize > 5 * 1024 * 1024) {
         res.status(400).json({ message: "File size too large" });
       }
       newProfilePicture = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/rsz${newFileName}`;
@@ -109,8 +107,8 @@ const upload = multer({
 });
 
 const uploadFileToBucket = async (file, newFileName) => {
-  const rszFileName = `rsz${newFileName}`
-  
+  const rszFileName = `rsz${newFileName}`;
+
   return new Promise((resolve, reject) => {
     file.mv(`./public/img/${newFileName}`, async (err) => {
       if (err) {
@@ -118,7 +116,6 @@ const uploadFileToBucket = async (file, newFileName) => {
         reject("Error uploading file");
       }
       try {
-     
         await sharp(`./public/img/${newFileName}`)
           .resize(512, 512)
           .toFile(`./public/img/${rszFileName}`);
@@ -129,7 +126,7 @@ const uploadFileToBucket = async (file, newFileName) => {
             contentType: "image/png",
           },
         });
-        fs.unlinkSync(`./public/img/${newFileName}`);
+        // fs.unlinkSync(`./public/img/${newFileName}`);
 
         resolve();
       } catch (error) {
@@ -144,16 +141,16 @@ const uploadFileToBucket = async (file, newFileName) => {
 const addFavourite = (req, res) => {
   const id_user = req.user.id;
   const id_post = req.body.id_post;
-  try{
-  favourite
-    .create({
-      id_user: id_user,
-      id_post: id_post,
-    })
-    .then((result) => {
-      res.status(200).json({ message: "Favourite added", data: result });
-    });
-  }catch{
+  try {
+    favourite
+      .create({
+        id_user: id_user,
+        id_post: id_post,
+      })
+      .then((result) => {
+        res.status(200).json({ message: "Favourite added", data: result });
+      });
+  } catch {
     res.send(err.message);
   }
 };
@@ -161,31 +158,41 @@ const addFavourite = (req, res) => {
 //Mengakses favourite
 const userFavourite = (req, res) => {
   const id_user = req.user.id;
-  try{
-  favourite
-    .findAll({
-      where: { id_user: id_user },
-      include: [
-        {
-          model: post,
-          attributes: ["id","upload_date","status","breed","post_picture", "id_user","id_animal","description","latitude","longitude"],
-        },
-      ],
-    })
-     //join table
-    .then((result) => {
-      if(result.length === 0){
-        res.status(204).json({ message: "You dont have any favourite post" });
-      }
-      res.status(200).json(result);
-    });
-  }catch(err){
+  try {
+    favourite
+      .findAll({
+        where: { id_user: id_user },
+        include: [
+          {
+            model: post,
+            attributes: [
+              "id",
+              "upload_date",
+              "status",
+              "breed",
+              "post_picture",
+              "id_user",
+              "id_animal",
+              "description",
+              "latitude",
+              "longitude",
+            ],
+          },
+        ],
+      })
+      //join table
+      .then((result) => {
+        if (result.length === 0) {
+          res.status(204).json({ message: "You dont have any favourite post" });
+        }
+        res.status(200).json(result);
+      });
+  } catch (err) {
     res.send(err.message);
   }
 };
 
 //Menghapus favourite
-
 
 export {
   profile,
@@ -193,5 +200,5 @@ export {
   updateProfile,
   addFavourite,
   userFavourite,
-  uploadFileToBucket
+  uploadFileToBucket,
 };

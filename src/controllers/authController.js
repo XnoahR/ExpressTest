@@ -34,23 +34,34 @@ const createSendToken = (user, statusCode, res) => {
 
 
 const register = (req, res) => {
-  const { username, email, password,phone } = req.body;
-
-  if(!username || !email || !password || !phone){
+  const { name, email, password,phone } = req.body;
+  email.toLowerCase();
+  console.log(email,password,name,phone);
+  if(!name || !email || !password || !phone){
     res.status(400).json({
       status: "Error",
       message: "Please fill all the required fields",
     });
   }
+  user.findOne({ where: { email: email } }).then((result) => {
+    if (result) {
+      res.status(400).json({
+        status: "Error",
+        message: "Email already registered",
+      });
+    }
+  } );
+  //delete space 
+  const userName = req.body.name.replace(/\s/g, ""); 
   try{
   user
     .create({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      phone: req.body.phone,
+      username: `${userName}_PetMe${Math.floor(Math.random() * 1000)}`,
+      email,
+      password,
+      phone,
       role: 1,
-      name: "User",
+      name,
     })
     .then((result) => {
       res.status(201).send(result);
@@ -86,7 +97,7 @@ const logout = (req, res) => {
       message: "You're not logged in",
     });
   }
-  
+
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
