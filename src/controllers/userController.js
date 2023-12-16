@@ -9,6 +9,8 @@ import md5 from "md5";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
+import post from "../models/postModel.js";
+import sharp from "sharp";
 
 const app = Express();
 
@@ -64,7 +66,7 @@ const updateProfile = async (req, res) => {
       const fileName = file.file.name;
       const ext = path.extname(fileName);
       const newFileName = md5(new Date().getTime()) + ext;
-      newProfilePicture = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/${newFileName}`;
+      newProfilePicture = `${req.protocol}://storage.googleapis.com/petmebucket/user_data/rsz${newFileName}`;
 
       await uploadFileToBucket(file.file, newFileName); // Separate function for file upload
     }
@@ -108,26 +110,30 @@ const upload = multer({
 });
 
 const uploadFileToBucket = async (file, newFileName) => {
+  const rszFileName = `rsz${newFileName}`
   return new Promise((resolve, reject) => {
     file.mv(`./public/img/${newFileName}`, async (err) => {
       if (err) {
         console.error(err);
         reject("Error uploading file");
       }
-
+      
       try {
-        await bucket.upload(`./public/img/${newFileName}`, {
-          destination: `user_data/${newFileName}`,
+        await sharp(`./public/img/${newFileName}`)
+          .resize(256, 256)
+          .toFile(`./public/img/${rszFileName}`);
+          // fs.unlinkSync(`./public/img/${newFileName}`);
+        await bucket.upload(`./public/img/${rszFileName}`, {
+          destination: `user_data/${rszFileName}`,
           public: true,
           metadata: {
             contentType: "image/png",
           },
         });
 
-        fs.unlinkSync(`./public/img/${newFileName}`);
         resolve();
       } catch (error) {
-        console.error(error);
+        console.error(error.message);
         reject("Error uploading file to bucket");
       }
     });
@@ -159,9 +165,19 @@ const userFavourite = (req, res) => {
   favourite
     .findAll({
       where: { id_user: id_user },
+      include: [
+        {
+          model: post,
+          attributes: ["id","upload_date","status","breed","post_picture", "id_user","id_animal","description","latitude","longitude"],
+        },
+      ],
     })
+     //join table
     .then((result) => {
-      res.json(result);
+      if(result.length === 0){
+        res.status(204).json({ message: "You dont have any favourite post" });
+      }
+      res.status(200).json(result);
     });
   }catch(err){
     res.send(err.message);
@@ -177,5 +193,5 @@ export {
   updateProfile,
   addFavourite,
   userFavourite,
-  
+  uploadFileToBucket
 };

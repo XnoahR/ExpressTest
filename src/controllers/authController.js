@@ -34,19 +34,33 @@ const createSendToken = (user, statusCode, res) => {
 
 
 const register = (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password,phone } = req.body;
 
+  if(!username || !email || !password || !phone){
+    res.status(400).json({
+      status: "Error",
+      message: "Please fill all the required fields",
+    });
+  }
+  try{
   user
     .create({
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
+      phone: req.body.phone,
       role: 1,
-      name: "John Doe",
+      name: "User",
     })
     .then((result) => {
-      res.send(result);
+      res.status(201).send(result);
     });
+  }catch(err){
+    res.status(400).json({
+      status: "Error",
+      message: "Email already registered",
+    });
+  }
 };
 
 
@@ -66,6 +80,13 @@ const login = (req, res) => {
 };
 
 const logout = (req, res) => {
+  if(!req.cookies.jwt){
+    res.status(401).json({
+      status: "Error",
+      message: "You're not logged in",
+    });
+  }
+  
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
