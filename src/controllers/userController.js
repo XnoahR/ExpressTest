@@ -145,7 +145,7 @@ const addFavourite = (req, res) => {
     favourite
       .create({
         id_user: id_user,
-        id_post: id_post,
+        id_post: id_post, 
       })
       .then((result) => {
         res.status(200).json({ message: "Favourite added", data: result });
@@ -183,9 +183,6 @@ const userFavourite = (req, res) => {
       })
       //join table
       .then((result) => {
-        if (result.length === 0) {
-          res.status(204).json({ message: "You dont have any favourite post" });
-        }
         res.status(200).json(result);
       });
   } catch (err) {
