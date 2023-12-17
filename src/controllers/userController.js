@@ -126,7 +126,7 @@ const uploadFileToBucket = async (file, newFileName) => {
             contentType: "image/png",
           },
         });
-        fs.unlinkSync(`./public/img/${newFileName}`);
+        // fs.unlinkSync(`./public/img/${newFileName}`);
 
         resolve();
       } catch (error) {
