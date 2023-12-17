@@ -15,7 +15,7 @@ const router = Express.Router();
 
 const getPost = (req, res) => {
   post.findAll().then((result) => {
-    res.send(result);
+    res.json(result);
   });
 };
 
@@ -118,7 +118,7 @@ const userPost = (req, res) => {
       where: { id_user: user },
     })
     .then((result) => {
-      res.send(result);
+      res.json(result);
     });
 };
 
@@ -144,7 +144,7 @@ const updatePost = (req, res) => {
     },
     { where: { id: id, id_user: id_user } }
   );
-  res.send(`Post updated. ID: ${id}, Title: ${title}`);
+  res.json({ message: `Post updated. ID: ${id}` });
 };
 
 const deletePost = async (req, res) => {
@@ -157,7 +157,7 @@ const deletePost = async (req, res) => {
     await post.destroy({
       where: { id: id, id_user: id_user },
     });
-    res.send(`Post deleted. ID: ${id}`);
+    res.json({ message: `Post deleted. ID: ${id}` });
   } catch (err) {
     res.send(err.message);
   }
@@ -173,7 +173,7 @@ const addFavourite = (req, res) => {
       id_post: id,
     })
     .then((result) => {
-      res.send(result);
+      res.json(result);
     });
 };
 
@@ -185,7 +185,7 @@ const deleteFavourite = async (req, res) => {
     await favourite.destroy({
       where: { id_post: id_post, id_user: id_user },
     });
-    res.send(`Favourite deleted. ID: ${id_post}`);
+    res.json({ message: `Favourite deleted. ID: ${id_post}` });
   } catch (err) {
     res.send(err.message);
   }
