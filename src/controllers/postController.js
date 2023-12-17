@@ -1,6 +1,7 @@
 import Express from "express";
 import post from "../models/postModel.js";
 import favourite from "../models/favouriteModel.js";
+import user from "../models/userModel.js";
 import { uploadFileToBucket } from "./userController.js";
 import fileUpload from "express-fileupload";
 import path from "path";
@@ -69,31 +70,41 @@ const createPost = async (req, res) => {
 };
 
 const findPost = async (req, res) => {
-  const user = req.user.id;
-  const id = req.params.id;
+  const userId = req.user.id;
+  const postId = req.params.id;
   let isFav = false;
 
-  const favCheck = await favourite.findAll({
-    where: { id_post: id, id_user: user },
-  });
-  if (favCheck.length > 0) {
-    isFav = true;
-  }
-
-  await post
-    .findAll({
-      where: { id: id },
-    })
-    .then((result) => {
-      if (result.length <= 0) {
-        res.status(204).json({ message: "Post not found" });
-      }
-
-      res
-        .status(200)
-        .json({ message: "Post found", data: result, user, isFav, favCheck });
+  try {
+    const favCheck = await favourite.findAll({
+      where: { id_post: postId, id_user: userId },
     });
+
+    if (favCheck.length > 0) {
+      isFav = true;
+    }
+
+    const result = await post.findOne({
+      where: { id: postId },
+      include: [
+        {
+          model: user, // Assuming user is the Sequelize model for users
+          attributes: ["name", "username", "phone"],
+        },
+      ],
+    });
+
+    if (!result) {
+      res.status(204).json({ message: "Post not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Post found", data: result, user: userId, isFav, favCheck });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
+
 
 const userPost = (req, res) => {
   const user = req.user.id;
