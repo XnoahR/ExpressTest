@@ -20,54 +20,49 @@ const getPost = (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const {
-      title,
-      id_animal,
-      description,
-      breed,
-      latitude,
-      longitude,
-    } = req.body;
+    const { title, id_animal, description, breed, latitude, longitude } =
+      req.body;
 
     const id_user = req.user.id;
     const file = req.files;
 
-    
     if (!file) return res.status(400).json({ message: "No file uploaded" });
 
     // Adjust the file handling based on your actual file structure
     // For example, if your file object has a 'name' property, you can use it like:
-    const fileName = file.file.name; 
+    const fileName = file.file.name;
     const ext = path.extname(fileName);
     const newFileName = md5(new Date().getTime()) + ext;
     const rszFileName = `https://storage.googleapis.com/petmebucket/user_data/rsz${newFileName}`;
     const folder = `./public/images/${rszFileName}`;
     const fileSize = file.file.size;
-      const allowedFileTypes = /jpeg|jpg|png/;
-      if(!allowedFileTypes.test(path.extname(fileName).toLowerCase())){
-        res.status(400).json({ message: "Invalid file type" });
-      }
-      if(fileSize > 12 * 1024 * 1024){
-        res.status(400).json({ message: "File size too large" });
-      }
-    
+    const allowedFileTypes = /jpeg|jpg|png/;
+    if (!allowedFileTypes.test(path.extname(fileName).toLowerCase())) {
+      res.status(400).json({ message: "Invalid file type" });
+    }
+    if (fileSize > 12 * 1024 * 1024) {
+      res.status(400).json({ message: "File size too large" });
+    }
+
     // Adjust the file handling function based on your actual file handling approach
     await uploadFileToBucket(file.file, newFileName);
 
-    post.create({
-      title,
-      upload_date: new Date(),
-      status: 1,
-      id_user,
-      id_animal,
-      description,
-      breed,
-      latitude,
-      longitude,
-      post_picture: rszFileName,
-    }).then((result) => {
-      res.status(201).json({ message: "Post created", data: result });
-    });
+    post
+      .create({
+        title,
+        upload_date: new Date(),
+        status: 1,
+        id_user,
+        id_animal,
+        description,
+        breed,
+        latitude,
+        longitude,
+        post_picture: rszFileName,
+      })
+      .then((result) => {
+        res.status(201).json({ message: "Post created", data: result });
+      });
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -78,24 +73,25 @@ const findPost = async (req, res) => {
   const id = req.params.id;
   let isFav = false;
 
- const favCheck = await favourite
-    .findOne({
-      where: { id_post: id, id_user: user },
-    });
-    if(favCheck.length > 0){
-      isFav = true;
-    }
+  const favCheck = await favourite.findAll({
+    where: { id_post: id, id_user: user },
+  });
+  if (favCheck.length > 0) {
+    isFav = true;
+  }
 
   await post
-    .findOne({
+    .findAll({
       where: { id: id },
     })
     .then((result) => {
-      if(result.length === 0){
+      if (result.length <= 0) {
         res.status(204).json({ message: "Post not found" });
       }
 
-      res.status(200).json({ message: "Post found", data: result, user, isFav, favCheck });
+      res
+        .status(200)
+        .json({ message: "Post found", data: result, user, isFav, favCheck });
     });
 };
 

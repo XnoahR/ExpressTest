@@ -167,6 +167,7 @@ const userFavourite = (req, res) => {
             model: post,
             attributes: [
               "id",
+              "title",
               "upload_date",
               "status",
               "breed",
