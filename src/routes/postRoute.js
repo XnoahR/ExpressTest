@@ -23,7 +23,6 @@ router.get("/edit/:id", editPost);
 router.post("/create", createPost);
 router.patch("/edit/:id", updatePost);
 router.patch("/edit/pict/:id", updatePostPicture);
-
 router.delete("/:id", deletePost);
 
 export default router;
